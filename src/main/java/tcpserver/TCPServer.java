@@ -83,7 +83,7 @@ public class TCPServer {
 				out.writeUTF(mensagem);
 
 				System.out.println("Enviando objeto de resposta....");
-//out.writeUTF("Echo: " + mensagem);
+				//out.writeUTF("Echo: " + mensagem);
 				outObject.writeObject(new Pessoa("Almir", "81 9 99998888"));
 				outObject.flush();
 			} catch (IOException ex) {

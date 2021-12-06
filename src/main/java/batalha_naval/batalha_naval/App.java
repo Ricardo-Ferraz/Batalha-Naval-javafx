@@ -9,13 +9,7 @@ import javax.swing.JOptionPane;
 
 public class App extends Application {
 
-	private static Tabuleiro tab;
-
-	public static void main(String[] args) {
-		int escolha = Integer.parseInt(JOptionPane.showInputDialog("0 a 8 - Escolha a posição do seu navio"));
-		tab = new Tabuleiro(escolha);
-		launch();
-	}
+	protected static Tabuleiro tab;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -23,6 +17,7 @@ public class App extends Application {
 			if (tab.getAlvo() == 0) {
 				System.out.println("Acertou!");
 				tab.reseta();
+				
 			} else {
 				tab.getMapa()[0].setDisable(true);
 				System.out.println("Errou!");
