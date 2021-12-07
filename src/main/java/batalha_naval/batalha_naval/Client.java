@@ -18,6 +18,7 @@ public class Client extends Application{
 
 	protected static Tabuleiro tab;
 	protected static int escolha;
+	protected static String nome;
 	protected static Socket socket;
 	protected static DataInputStream in;
 	protected static DataOutputStream out;
@@ -29,6 +30,8 @@ public class Client extends Application{
 		out = new DataOutputStream(socket.getOutputStream());
 		
 		new ConnectionAuxiliar(in, out).start();
+		
+		nome = JOptionPane.showInputDialog("Por favor, digite seu nome");
 
 		escolha = Integer.parseInt(JOptionPane.showInputDialog("0 a 8 - Escolha a posição do seu navio"));
 		tab = new Tabuleiro(escolha);
@@ -206,7 +209,7 @@ public class Client extends Application{
 		VBox root = new VBox(box, box2, box3);
 		primaryStage.setScene(new Scene(root));
 		
-		primaryStage.setTitle("Batalha Naval #"+System.currentTimeMillis());
+		primaryStage.setTitle("Batalha Naval #"+nome);
 
 		primaryStage.show();
 	}

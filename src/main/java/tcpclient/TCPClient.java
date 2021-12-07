@@ -46,7 +46,7 @@ public class TCPClient {
 			out = new DataOutputStream(s.getOutputStream());
 			inO = new ObjectInputStream(s.getInputStream());
 			in = new DataInputStream(s.getInputStream());
-
+while(true) {
 // enviando mensagem
 			System.out.print("Digite Mensagem: ");
 			mensagem = ler.nextLine();
@@ -72,6 +72,7 @@ public class TCPClient {
 			System.out.println("Aguardando objeto do Servidor.....");
 			Pessoa resposta = (Pessoa) inO.readObject();
 			System.out.println("Objeto recebido do Servidor: " + resposta);
+}
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
@@ -86,7 +87,7 @@ public class TCPClient {
 					Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
 				}
 		}
-
+		
 	}
 
 }
