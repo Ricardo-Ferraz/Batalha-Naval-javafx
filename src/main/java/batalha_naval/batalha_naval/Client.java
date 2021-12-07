@@ -3,7 +3,6 @@ package batalha_naval.batalha_naval;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -16,7 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Client extends Application{
+public class Client extends Application {
 
 	protected static Tabuleiro tab;
 	protected static int escolha;
@@ -34,10 +33,10 @@ public class Client extends Application{
 		in = new DataInputStream(socket.getInputStream());
 		out = new DataOutputStream(socket.getOutputStream());
 		rn = new Random();
-		//objOut = new ObjectOutputStream(socket.getOutputStream());
-		
+	//	objOut = new ObjectOutputStream(socket.getOutputStream());
+
 		new ConnectionAuxiliar(in, out).start();
-		
+
 		nome = JOptionPane.showInputDialog("Por favor, digite seu nome");
 
 		escolha = Integer.parseInt(JOptionPane.showInputDialog("0 a 8 - Escolha a posição do seu navio"));
@@ -47,31 +46,36 @@ public class Client extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		for(int i = 0; i < 9; i++) {
-			final String str = ""+i;
+		for (int i = 0; i < 9; i++) {
+			final String str = "" + i;
 			final int k = i;
 			tab.getMapa()[i].setOnAction(value -> {
 				try {
 					out.writeUTF(str);
 					in = new DataInputStream(socket.getInputStream());
 					out = new DataOutputStream(socket.getOutputStream());
-					//objOut = new ObjectOutputStream(socket.getOutputStream());
+				//	objOut = new ObjectOutputStream(socket.getOutputStream());
 					count++;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				if (tab.getAlvo() == k) {
 					System.out.println("Acertou!");
-					count = 0;
-					escolha = rn.nextInt(9);
-					tab.setAlvo(escolha);
+					try {
+						out.writeUTF("reseta");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					 count = 0;
+					 escolha = rn.nextInt(9);
+					 tab.setAlvo(escolha);
 					tab.reseta();
-					JOptionPane.showMessageDialog(null, "Parabéns "+nome+", você acertou o alvo!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
+					 JOptionPane.showMessageDialog(null, "Parabéns "+nome+", você acertou o alvo!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					tab.getMapa()[k].setDisable(true);
 					System.out.println("Errou!");
 				}
-				if(count > 0) {
+				if (count > 0) {
 					tab.disable();
 				}
 
@@ -82,50 +86,47 @@ public class Client extends Application{
 		HBox box3 = new HBox(tab.getMapa()[6], tab.getMapa()[7], tab.getMapa()[8]);
 		VBox root = new VBox(box, box2, box3);
 		primaryStage.setScene(new Scene(root));
-		
-		primaryStage.setTitle("Batalha Naval #"+nome);
+
+		primaryStage.setTitle("Batalha Naval #" + nome);
 
 		primaryStage.show();
 	}
 
-	
-
 }
 
-class ConnectionAuxiliar extends Thread{
-	
+class ConnectionAuxiliar extends Thread {
+
 	DataInputStream in;
 	DataOutputStream out;
-	
+
 	public ConnectionAuxiliar(DataInputStream in, DataOutputStream out) {
-		this.in= in;
-		this.out= out;
+		this.in = in;
+		this.out = out;
 	}
-	
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		boolean running = true;
-		while(running) {
+		while (running) {
 			try {
 				String mensagem = in.readUTF();
 				System.out.println(mensagem);
-				if(!mensagem.equals("Acertou!") && !mensagem.equals("Errou!")) {
+				if (!mensagem.equals("Acertou!") && !mensagem.equals("Errou!")) {
 					Client.count--;
 				}
-				if(Client.count <= 0) {
+				if (Client.count <= 0) {
 					Client.tab.able();
 				}
-				System.out.println("Alvo = "+Client.escolha);
-				if(mensagem.equals(""+Client.escolha)) {
-					Client.count = 0;
-					Client.escolha = Client.rn.nextInt(9);
-					Client.tab.setAlvo(Client.escolha);
-					Client.tab.reseta();
-					JOptionPane.showMessageDialog(null, "Que pena "+Client.nome+", seu navio afundou!", "Urgente!", JOptionPane.INFORMATION_MESSAGE);
+				// System.out.println("Alvo = "+Client.escolha);
+				if (mensagem.equals("reseta")) {
+					 Client.count = 0;
+					 Client.escolha = Client.rn.nextInt(9);
+					 Client.tab.setAlvo(Client.escolha);
+					 Client.tab.reseta();
+					 JOptionPane.showMessageDialog(null, "Que pena "+Client.nome+", seu navio afundou!", "Urgente!", JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (IOException e) {
-				//running = false;
+				// running = false;
 			}
 		}
 	}

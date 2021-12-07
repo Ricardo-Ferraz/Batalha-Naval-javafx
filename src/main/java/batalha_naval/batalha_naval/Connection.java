@@ -50,9 +50,14 @@ public class Connection extends Thread {
 		while (running) {
 			try {
 				String mensagem = in.readUTF();
-				int jogada = Integer.parseInt(mensagem);
-				
-				out2.writeUTF(mensagem);
+				if(mensagem.equals("reseta")) {
+					out2.writeUTF("reseta");
+				}
+				else {
+					int jogada = Integer.parseInt(mensagem);
+					
+					out2.writeUTF(mensagem);
+				}
 			} catch (IOException e) {
 				//running = false;
 			}
