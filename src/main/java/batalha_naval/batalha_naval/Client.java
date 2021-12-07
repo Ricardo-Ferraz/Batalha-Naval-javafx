@@ -25,7 +25,6 @@ public class Client extends Application {
 	protected static DataOutputStream out;
 	protected static int count = 0;
 	protected static Random rn;
-	//protected static ObjectOutputStream objOut;
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		System.out.println("Aguardando servidor...");
@@ -33,7 +32,6 @@ public class Client extends Application {
 		in = new DataInputStream(socket.getInputStream());
 		out = new DataOutputStream(socket.getOutputStream());
 		rn = new Random();
-	//	objOut = new ObjectOutputStream(socket.getOutputStream());
 
 		new ConnectionAuxiliar(in, out).start();
 
@@ -54,7 +52,6 @@ public class Client extends Application {
 					out.writeUTF(str);
 					in = new DataInputStream(socket.getInputStream());
 					out = new DataOutputStream(socket.getOutputStream());
-				//	objOut = new ObjectOutputStream(socket.getOutputStream());
 					count++;
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -106,8 +103,7 @@ class ConnectionAuxiliar extends Thread {
 
 	@Override
 	public void run() {
-		boolean running = true;
-		while (running) {
+		while (true) {
 			try {
 				String mensagem = in.readUTF();
 				System.out.println(mensagem);
@@ -117,7 +113,7 @@ class ConnectionAuxiliar extends Thread {
 				if (Client.count <= 0) {
 					Client.tab.able();
 				}
-				// System.out.println("Alvo = "+Client.escolha);
+				
 				if (mensagem.equals("reseta")) {
 					 Client.count = 0;
 					 Client.escolha = Client.rn.nextInt(9);
@@ -126,7 +122,7 @@ class ConnectionAuxiliar extends Thread {
 					 JOptionPane.showMessageDialog(null, "Que pena "+Client.nome+", seu navio afundou!", "Urgente!", JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (IOException e) {
-				// running = false;
+				
 			}
 		}
 	}
