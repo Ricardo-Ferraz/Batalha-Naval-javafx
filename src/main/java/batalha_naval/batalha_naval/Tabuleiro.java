@@ -24,7 +24,7 @@ public class Tabuleiro {
 		this.inicializa();
 		this.alvo = alvo;
 	}
-
+	
 	public void inicializa() {
 		try {
 			FileInputStream file = new FileInputStream("res/icon.png");
@@ -48,6 +48,7 @@ public class Tabuleiro {
 		for(int i=0; i < this.mapa.length; i++) {
 			this.mapa[i].setDisable(false);
 		}
+		posDisables = null;
 	}
 	
 	public void disable() {
@@ -56,24 +57,31 @@ public class Tabuleiro {
 			if(this.mapa[i].isDisable()) {
 				qtd++;
 			}
-			else {
-				this.mapa[i].setDisable(true);
-			}
 		}
 		
 		this.posDisables = new int[qtd];
+		int count = 0;
 		
-		for(int i=0; i < this.mapa.length; i++) {
+		for(int i=0; i < 9; i++) {
 			if(this.mapa[i].isDisable()) {
-				this.posDisables[i]= i;
+				this.posDisables[count]= i;
+				count++;
 			}
+		}
+		
+		for(int k=0; k<9; k++) {
+			this.mapa[k].setDisable(true);
 		}
 		
 	}
 	
 	public void able() {
-		for(int i=0; i < this.posDisables.length; i++) {
-			this.mapa[this.posDisables[i]].setDisable(false);
+		if(this.posDisables == null) return;
+		for(int i=0; i < 9; i++) {
+			this.mapa[i].setDisable(false);
+		}
+		for(int j=0; j<this.posDisables.length; j++) {
+			this.mapa[this.posDisables[j]].setDisable(true);
 		}
 	}
 

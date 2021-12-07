@@ -46,14 +46,15 @@ public class Connection extends Thread {
 
 	@Override
 	public void run() {
-		while (true) {
+		boolean running = true;
+		while (running) {
 			try {
 				String mensagem = in.readUTF();
 				int jogada = Integer.parseInt(mensagem);
 				
 				out2.writeUTF(mensagem);
 			} catch (IOException e) {
-				e.printStackTrace();
+				//running = false;
 			}
 		}
 

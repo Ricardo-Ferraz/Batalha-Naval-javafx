@@ -3,8 +3,10 @@ package batalha_naval.batalha_naval;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -22,12 +24,17 @@ public class Client extends Application{
 	protected static Socket socket;
 	protected static DataInputStream in;
 	protected static DataOutputStream out;
+	protected static int count = 0;
+	protected static Random rn;
+	//protected static ObjectOutputStream objOut;
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		System.out.println("Aguardando servidor...");
 		socket = new Socket("localhost", 6999);
 		in = new DataInputStream(socket.getInputStream());
 		out = new DataOutputStream(socket.getOutputStream());
+		rn = new Random();
+		//objOut = new ObjectOutputStream(socket.getOutputStream());
 		
 		new ConnectionAuxiliar(in, out).start();
 		
@@ -40,169 +47,36 @@ public class Client extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
-		tab.getMapa()[0].setOnAction(value -> {
-			try {
-				out.writeUTF("0");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 0) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[0].setDisable(true);
-				System.out.println("Errou!");
-			}
+		for(int i = 0; i < 9; i++) {
+			final String str = ""+i;
+			final int k = i;
+			tab.getMapa()[i].setOnAction(value -> {
+				try {
+					out.writeUTF(str);
+					in = new DataInputStream(socket.getInputStream());
+					out = new DataOutputStream(socket.getOutputStream());
+					//objOut = new ObjectOutputStream(socket.getOutputStream());
+					count++;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (tab.getAlvo() == k) {
+					System.out.println("Acertou!");
+					count = 0;
+					escolha = rn.nextInt(9);
+					tab.setAlvo(escolha);
+					tab.reseta();
+					JOptionPane.showMessageDialog(null, "Parabéns "+nome+", você acertou o alvo!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					tab.getMapa()[k].setDisable(true);
+					System.out.println("Errou!");
+				}
+				if(count > 0) {
+					tab.disable();
+				}
 
-		});
-
-		tab.getMapa()[1].setOnAction(value -> {
-			try {
-				out.writeUTF("1");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 1) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[1].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[2].setOnAction(value -> {
-			try {
-				out.writeUTF("2");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 2) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[2].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[3].setOnAction(value -> {
-			try {
-				out.writeUTF("3");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 3) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[3].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[4].setOnAction(value -> {
-			try {
-				out.writeUTF("4");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 4) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[4].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[5].setOnAction(value -> {
-			try {
-				out.writeUTF("5");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 5) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[5].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[6].setOnAction(value -> {
-			try {
-				out.writeUTF("6");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 6) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[6].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[7].setOnAction(value -> {
-			try {
-				out.writeUTF("7");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 7) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[7].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
-		tab.getMapa()[8].setOnAction(value -> {
-			try {
-				out.writeUTF("8");
-				in = new DataInputStream(socket.getInputStream());
-				out = new DataOutputStream(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (tab.getAlvo() == 8) {
-				System.out.println("Acertou!");
-				tab.reseta();
-			} else {
-				tab.getMapa()[8].setDisable(true);
-				System.out.println("Errou!");
-			}
-
-		});
-
+			});
+		}
 		HBox box = new HBox(tab.getMapa()[0], tab.getMapa()[1], tab.getMapa()[2]);
 		HBox box2 = new HBox(tab.getMapa()[3], tab.getMapa()[4], tab.getMapa()[5]);
 		HBox box3 = new HBox(tab.getMapa()[6], tab.getMapa()[7], tab.getMapa()[8]);
@@ -231,13 +105,27 @@ class ConnectionAuxiliar extends Thread{
 	
 	@Override
 	public void run(){
-		while(true) {
+		boolean running = true;
+		while(running) {
 			try {
 				String mensagem = in.readUTF();
 				System.out.println(mensagem);
+				if(!mensagem.equals("Acertou!") && !mensagem.equals("Errou!")) {
+					Client.count--;
+				}
+				if(Client.count <= 0) {
+					Client.tab.able();
+				}
+				System.out.println("Alvo = "+Client.escolha);
+				if(mensagem.equals(""+Client.escolha)) {
+					Client.count = 0;
+					Client.escolha = Client.rn.nextInt(9);
+					Client.tab.setAlvo(Client.escolha);
+					Client.tab.reseta();
+					JOptionPane.showMessageDialog(null, "Que pena "+Client.nome+", seu navio afundou!", "Urgente!", JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//running = false;
 			}
 		}
 	}
